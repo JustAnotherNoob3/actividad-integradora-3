@@ -8,7 +8,7 @@ let faker = fakerES_MX;
 class ProductManager {
     async addProduct(product) {
         if (product.thumbnails === undefined) product.thumbnails = [];
-
+        if (product.owner === undefined) product.owner = "admin";
         let newProduct = await daoProducts.create(product);
         return newProduct._id;
     }
@@ -53,10 +53,14 @@ class ProductManager {
         return product.stock;
     }
     async getProductByCode(code) {
-        let product = await daoProducts.getByOther({ code: code });
+        let product = await daoProducts.getOneByOther({ code: code });
         if (product == undefined) {
             throw "No product of code " + code;
         }
+        return product;
+    }
+    async getProductsFrom(owner) {
+        let product = await daoProducts.getByOther({ owner: owner });
         return product;
     }
     async createTestProducts() {

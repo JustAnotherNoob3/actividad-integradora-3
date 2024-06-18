@@ -17,6 +17,7 @@ import initializePassport from './config/passport.config.js';
 import config from './config/config.js';
 import { addLogger } from './utils/logger.js';
 import testingRouter from './routes/testingRouter.js';
+import userRouter from './routes/userRouter.js';
 const DB_URL = config.mongoUrl;
 
 //const fileStorage = FileStore(session);
@@ -91,8 +92,9 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/sessions", sessionsRouter);
+app.use("/api/users", userRouter);
 app.use(viewsRouter);
-app.use(testingRouter)
+app.use(testingRouter);
 
 
 

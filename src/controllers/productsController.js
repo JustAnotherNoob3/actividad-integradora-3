@@ -37,7 +37,10 @@ class ProductsController{
     async createProduct(req, res){
         let product = req.body;
         try {
-            let id = await productManager.addProduct(product);
+            let id;
+            req.logger.debug(req.role)
+            if(req.role == 'admin') id = await productManager.addProduct(product);
+            else id = await productManager.addProduct(product, req.session.user.email);
             res.status(200).send({ status: "success", payload: { id: id } });
             const io = req.app.get('socketio');
             io.emit("addProduct", { id: id.toString(), product: product });
@@ -49,6 +52,9 @@ class ProductsController{
         let product = req.body;
         let productToChange = req.params.pid;
         try {
+            if(req.role == 'premium'){
+                if((await productManager.getProductById(productToChange)).owner != req.session.user.email) throw "Unauthorized"
+            }
             await productManager.updateProduct(productToChange, product);
             res.status(200).send({ status: "success" });
             const io = req.app.get('socketio');
@@ -60,6 +66,9 @@ class ProductsController{
     async deleteProduct(req, res)  {
         let product = req.params.pid;
         try {
+            if(req.role == 'premium'){
+                if((await productManager.getProductById(productToChange)).owner != req.session.user.email) throw "Unauthorized"
+            }
             await productManager.deleteProduct(product);
             res.status(200).send({ status: "success" });
             const io = req.app.get('socketio');

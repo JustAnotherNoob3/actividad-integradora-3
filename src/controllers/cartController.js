@@ -1,6 +1,6 @@
 import { __dirname } from "../utils/misc_utils.js";
 import cartManager from "../Repositories/CartManager.js";
-
+import productManager from "../Repositories/ProductManager.js";
 class CartController{
     async getCart(req, res){
         let id = req.params.cid;
@@ -24,6 +24,9 @@ class CartController{
         let pid = req.params.pid;
         let qMany = req.body.quantity;
         try {
+            if(req.session.user.role == 'premium'){
+                if((await productManager.getProductById(productToChange)).owner != req.session.user.email) throw "You can't add your own products to your cart"
+            }
             let quantity = await cartManager.addProductToCart(cid, pid, qMany);
             res.status(200).send({status: "success", payload: {quantity: quantity}});
         } catch (error) {

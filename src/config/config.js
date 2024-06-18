@@ -7,5 +7,7 @@ export default {
     adminPassword: process.env.ADMIN_PASSWORD,
     sessionSecret: process.env.SESSION_SECRET,
     isProd: process.env.BACKEND_TYPE == 'Productive',
+    gAccess: process.env.GACCESS,
+    gmail: process.env.GMAIL,
     daoType: process.argv[2]
 }

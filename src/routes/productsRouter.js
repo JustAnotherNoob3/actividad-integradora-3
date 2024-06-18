@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { __dirname } from "../utils/misc_utils.js";
 import productsController from "../controllers/productsController.js";
-import { isAdmin } from "../auth.js";
+import { isAdminOrPremium } from "../auth.js";
 
 const productsRouter = Router();
 
@@ -11,10 +11,10 @@ productsRouter.get("/mockingproducts", productsController.GetMockProducts);
 
 productsRouter.get("/:pid", productsController.GetProductById);
 
-productsRouter.post("/", isAdmin,productsController.createProduct);
+productsRouter.post("/", isAdminOrPremium,productsController.createProduct);
 
-productsRouter.put("/:pid", isAdmin, productsController.editProduct);
+productsRouter.put("/:pid", isAdminOrPremium, productsController.editProduct);
 
-productsRouter.delete("/:pid", isAdmin, productsController.deleteProduct);
+productsRouter.delete("/:pid", isAdminOrPremium, productsController.deleteProduct);
 
 export default productsRouter;
